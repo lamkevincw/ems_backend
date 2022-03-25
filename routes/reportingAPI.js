@@ -120,10 +120,10 @@ async function getLatestFilenames(site) {
         var lastModified = moment(0);
         for (var i = 0; i < objects.length; i++) {
             // console.log(moment(objects[i].LastModified).format('ddd MMM DD YYYY HH:mm:ss ZZ'));
-            if (moment(objects[i].LastModified) >= lastModified
+            if (moment(objects[i].LastModified).utcOffset('-0600') >= lastModified
                 && objects[i].Key.substring(objects[i].Key.length - 3) === "csv") {
                 latest = objects[i].Key;
-                lastModified = moment(objects[i].LastModified);
+                lastModified = moment(objects[i].LastModified).utcOffset('-0600');
                 // latestFiles.push(latest);
             }
             // console.log(latest);
@@ -238,8 +238,8 @@ function setupData(raw) {
                 // console.log(raw[0].site + " " + quantifiers[q]+ " " + reportedDate + " " + lastVoltage + "/" + site_metadata[raw[0].site].voltage_threshold);
 
                 // console.log(reportedDate.toLocaleDateString() + " " + currentDate);
-                quantifierReport[quantifiers[q]].q_reporting = (reportedDate.toLocaleDateString() === currentDate);
-                quantifierReport[quantifiers[q]].q_last_reported = reportedDate.toLocaleDateString("en-US") + ", " + reportedDate.toLocaleTimeString("en-US");
+                quantifierReport[quantifiers[q]].q_reporting = (reportedDate.toLocaleDateString("en-US", { timeZone: "America/Regina" }) === currentDate);
+                quantifierReport[quantifiers[q]].q_last_reported = reportedDate.toLocaleDateString("en-US", { timeZone: "America/Regina" }) + ", " + reportedDate.toLocaleTimeString("en-US", { timeZone: "America/Regina" });
                 quantifierReport[quantifiers[q]].q_voltage = lastVoltage;
                 quantifierReport[quantifiers[q]].q_voltage_low = (lastVoltage < site_metadata[raw[0].site].voltage_threshold);
                 // sensor1_data_received = is_active_board1.main,
@@ -294,8 +294,8 @@ function setupData(raw) {
                 var reportedDate = new Date(parseInt(raw[lastQRow[quantifiers[q]][0]].timestamp));
                 var lastVoltage = parseFloat(raw[lastQRow[quantifiers[q]][0]].battery_voltage);
 
-                quantifierReport[quantifiers[q]].q_reporting = (reportedDate.toLocaleDateString() === currentDate);
-                quantifierReport[quantifiers[q]].q_last_reported = reportedDate.toLocaleDateString("en-US") + ", " + reportedDate.toLocaleTimeString("en-US");
+                quantifierReport[quantifiers[q]].q_reporting = (reportedDate.toLocaleDateString("en-US", { timeZone: "America/Regina" }) === currentDate);
+                quantifierReport[quantifiers[q]].q_last_reported = reportedDate.toLocaleDateString("en-US", { timeZone: "America/Regina" }) + ", " + reportedDate.toLocaleTimeString("en-US", { timeZone: "America/Regina" });
                 quantifierReport[quantifiers[q]].q_voltage = lastVoltage;
                 quantifierReport[quantifiers[q]].q_voltage_low = (true);
                 quantifierReport[quantifiers[q]].q_sensor1 = (raw[lastQRow[quantifiers[q]][1]]["detector_raw1"] !== "");
