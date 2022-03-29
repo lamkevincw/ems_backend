@@ -98,7 +98,7 @@ const sites = [
 ];
 var latestFiles = [];
 
-const currentDate = (new Date()).toLocaleDateString("en-US");
+const currentDate = (new Date()).toLocaleDateString("en-US", { timeZone: "America/Regina" });
 
 async function getLatestFilenames(site) {
     await s3.listObjects({
