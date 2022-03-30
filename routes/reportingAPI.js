@@ -232,11 +232,12 @@ function setupData(raw) {
                         lastQRow[quantifiers[q]] = i;
                     }
                 }
+                
 
                 var reportedDate = new Date(parseInt(raw[lastQRow[quantifiers[q]]].timestamp));
                 var lastVoltage = parseFloat(raw[lastQRow[quantifiers[q]]].battery_voltage);
                 // console.log(raw[0].site + " " + quantifiers[q]+ " " + reportedDate + " " + lastVoltage + "/" + site_metadata[raw[0].site].voltage_threshold);
-
+                console.log((new Date()).toLocaleString("en-US", { timeZone: "America/Regina" }) + " " + reportedDate.toLocaleString("en-US", { timeZone: "America/Regina" }));
                 // console.log(reportedDate.toLocaleDateString() + " " + currentDate);
                 quantifierReport[quantifiers[q]].q_reporting = (reportedDate.toLocaleDateString("en-US", { timeZone: "America/Regina" }) === currentDate);
                 quantifierReport[quantifiers[q]].q_last_reported = reportedDate.toLocaleDateString("en-US", { timeZone: "America/Regina" }) + ", " + reportedDate.toLocaleTimeString("en-US", { timeZone: "America/Regina" });
