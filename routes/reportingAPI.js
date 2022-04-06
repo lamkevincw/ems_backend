@@ -47,6 +47,10 @@ const site_metadata = {
     "exsitu_NSZD_Kerrobert_v2": {
         "quantifiers": ["Q08"],
         "voltage_threshold": 10
+    },
+    "Drumheller": {
+        "quantifiers": ["Q01", "Q02", "Q03", "Q04", "Q05"],
+        "voltage_threshold": 9
     }
 }
 const sites = [
@@ -94,6 +98,11 @@ const sites = [
         "version": "Quantifier-3_0",
         "fileType": "up",
         "name": "exsitu_NSZD_Kerrobert_v2"
+    },
+    {
+        "version": "Quantifier",
+        "fileType": "up",
+        "name": "Drumheller"
     }
 ];
 var latestFiles = [];
