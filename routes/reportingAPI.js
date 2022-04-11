@@ -10,9 +10,9 @@ var s3 = new AWS.S3();
 
 const site_metadata = {
     "Kerrobert": {
-        "quantifiers": ["Q01", "Q02", "Q03", "Q04", "Q05", "Q06", "Q07", "Q08", "Q09", "Q10",
-            "Q11", "Q12", "Q13", "Q14", "Q15", "Q16", "Q17"],
-        "voltage_threshold": 10
+        "quantifiers": ["Above_Ground", "Q01", "Q03", "Q06", "Q07", "Q08", "Q10",
+            "Q11", "Q12", "Q13", "Q14", "Q15", "Q17"],
+        "voltage_threshold": 10,
     },
     "Hoosier": {
         "quantifiers": ["Q01", "Q02", "Q03", "Q04", "Q05", "Q06", "Q07", "Q08", "Q09", "Q10",
@@ -49,6 +49,10 @@ const site_metadata = {
         "voltage_threshold": 10
     },
     "Drumheller": {
+        "quantifiers": ["Q01", "Q02", "Q03", "Q04", "Q05"],
+        "voltage_threshold": 9
+    },
+    "Cremona": {
         "quantifiers": ["Q01", "Q02", "Q03", "Q04", "Q05"],
         "voltage_threshold": 9
     }
@@ -103,6 +107,11 @@ const sites = [
         "version": "Quantifier",
         "fileType": "up",
         "name": "Drumheller"
+    },
+    {
+        "version": "Quantifier",
+        "fileType": "up",
+        "name": "Cremona"
     }
 ];
 var latestFiles = [];

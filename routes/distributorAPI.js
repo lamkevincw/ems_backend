@@ -3,73 +3,73 @@ var app = express();
 const puppeteer = require("puppeteer");
 
 const site_login = "https://saga.sagatech.ca/ucs/main.php";
-const site_url = "https://saga.sagatech.ca/ucs/main.php?func=device&id=1";
+const site_url = "https://saga.sagatech.ca/ucs/main.php?func=device&id=";
 const site_logout = `https://saga.sagatech.ca/ucs/main.php?func=logout`;
-const MOVIE_ID = ``;
-async function scrapeData() {
+let credentials = require("../sagatech.json");
+
+async function scrapeData(queryID) {
     /* Initiate the Puppeteer browser */
     console.log("Start puppet")
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    /* Go to the IMDB Movie page and wait for it to load */
-    // await page.goto(site_logout, { waitUntil: 'networkidle0' });
-    await page.goto(site_login, { waitUntil: 'networkidle0' });
-    /* Run javascript inside of the page */
 
-    await page.type('#username', "ems");
-    await page.type('#passwd', "19092441");
+    // Login to sagatech website
+    await page.goto(site_login, { waitUntil: 'networkidle0' });
+    await page.type('#username', credentials.username);
+    await page.type('#passwd', credentials.password);
     await Promise.all([
         page.click('#LoginButton'),
         page.waitForNavigation({ waitUntil: 'networkidle0' }),
     ]);
-    // await page.click('#LoginButton');
-    // await page.waitForNavigation();
     console.log("Logged in at: " + page.url());
-    await page.goto(site_url, { waitUntil: 'networkidle0' });
+    let devList = await page.evaluate(() => {
+        const rows = document.querySelectorAll('.devList tr');
+        return Array.from(rows, row => row);
+    });
+    console.log(devList.length);
 
-    let deviceMetadata = await page.evaluate(() => {
-        const tds = Array.from(document.getElementsByClassName("devDetail"));
-        return tds.map(td => td.innerText);
-    });
-    let headers = await page.evaluate(() => {
-        const rows = document.querySelectorAll('.devList tr');
-        return Array.from(rows, row => {
-            const columns = row.querySelectorAll('th');
-            return Array.from(columns, column => column.innerText);
+    // Scrape data from relevant devices
+    var dataset = {};
+    for (var i = 1; i < devList.length + 1; i++) {
+        await page.goto(site_url + i, { waitUntil: 'networkidle0' });
+
+        // let deviceMetadata = await page.evaluate(() => {
+        //     const tds = Array.from(document.getElementsByClassName("devDetail"));
+        //     return tds.map(td => td.innerText);
+        // });
+        let headerRow = await page.evaluate(() => {
+            const rows = document.querySelectorAll('.devList tr');
+            return Array.from(rows, row => {
+                const columns = row.querySelectorAll('th');
+                return Array.from(columns, column => column.innerText);
+            });
         });
-    });
-    let data = await page.evaluate(() => {
-        const rows = document.querySelectorAll('.devList tr');
-        return Array.from(rows, row => {
-            const columns = row.querySelectorAll('td');
-            return Array.from(columns, column => column.innerText);
+        let dataRows = await page.evaluate(() => {
+            const rows = document.querySelectorAll('.devList tr');
+            return Array.from(rows, row => {
+                const columns = row.querySelectorAll('td');
+                return Array.from(columns, column => column.innerText);
+            });
         });
-    });
-    data[0] = headers[0];
-    // let data = await page.evaluate(() => {
-    //     let title = document.querySelector('div[class="title_wrapper"] > h1').innerText;
-    //     let rating = document.querySelector('span[itemprop="ratingValue"]').innerText;
-    //     let ratingCount = document.querySelector('span[itemprop="ratingCount"]').innerText;
-    //     /* Returning an object filled with the scraped data */
-    //     return {
-    //         title,
-    //         rating,
-    //         ratingCount
-    //     }
-    // });
-    /* Outputting what we scraped */
+        dataRows[0] = headerRow[0];
+        
+        dataset[i] = dataRows;
+    }
+
     // console.log(deviceMetadata);
     // console.log(data);
+    // Logout and close browser when finished scraping
     await page.goto(site_logout, { waitUntil: 'networkidle0' });
     await browser.close();
-    return data;
+    console.log("Logged out of sagatech.")
+    return dataset;
 }
 
 app.get("/", function (req, res, next) {
-    scrapeData().then((data) => {
+    scrapeData(req.query.id).then((data) => {
         res.send(data);
-    });
-
+    })
+    .catch(console.log);
 });
 
 module.exports = app;
