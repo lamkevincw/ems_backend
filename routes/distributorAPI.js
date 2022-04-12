@@ -1,11 +1,15 @@
 var express = require("express");
 var app = express();
 const puppeteer = require("puppeteer");
+var moment = require("moment");
 
 const site_login = "https://saga.sagatech.ca/ucs/main.php";
 const site_url = "https://saga.sagatech.ca/ucs/main.php?func=device&id=";
 const site_logout = `https://saga.sagatech.ca/ucs/main.php?func=logout`;
 let credentials = require("../sagatech.json");
+
+let CACHED_DATA = false;
+let scraped_date = moment();
 
 async function scrapeData(queryID) {
     /* Initiate the Puppeteer browser */
@@ -66,10 +70,16 @@ async function scrapeData(queryID) {
 }
 
 app.get("/", function (req, res, next) {
-    scrapeData(req.query.id).then((data) => {
-        res.send(data);
-    })
-    .catch(console.log);
+    if (scraped_date.diff(moment(), "days") == 0 && CACHED_DATA) {
+        res.send(CACHED_DATA);
+    } else {
+        scrapeData(req.query.id).then((data) => {
+            scraped_date = moment();
+            CACHED_DATA = {...data};
+            res.send(data);
+        })
+        .catch(console.log);
+    }
 });
 
 module.exports = app;
