@@ -55,6 +55,10 @@ const site_metadata = {
     "Cremona": {
         "quantifiers": ["Q01", "Q02", "Q03", "Q04", "Q05"],
         "voltage_threshold": 9
+    },
+    "P_33rd": {
+        "quantifiers": ["Q02"],
+        "voltage_threshold": 9
     }
 }
 const sites = [
@@ -112,6 +116,11 @@ const sites = [
         "version": "Quantifier",
         "fileType": "up",
         "name": "Cremona"
+    },
+    {
+        "version": "Quantifier-3_0",
+        "fileType": "up",
+        "name": "P_33rd"
     }
 ];
 var latestFiles = [];
