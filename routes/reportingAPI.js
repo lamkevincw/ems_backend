@@ -57,7 +57,7 @@ const site_metadata = {
         "voltage_threshold": 9
     },
     "P_33rd": {
-        "quantifiers": ["Q02"],
+        "quantifiers": ["Q01", "Q02", "Q03", "Q04"],
         "voltage_threshold": 9
     }
 }
@@ -148,7 +148,7 @@ async function getLatestFilenames(site) {
         for (var i = 0; i < objects.length; i++) {
             // console.log(moment(objects[i].LastModified).format('ddd MMM DD YYYY HH:mm:ss ZZ'));
             if (moment(objects[i].LastModified).utcOffset('-0600') >= lastModified
-                && objects[i].Key.substring(objects[i].Key.length - 3) === "csv") {
+                && objects[i].Key.substring(objects[i].Key.length - 3) === "csv") { // Toggle between csv and json
                 latest = objects[i].Key;
                 lastModified = moment(objects[i].LastModified).utcOffset('-0600');
                 // latestFiles.push(latest);
@@ -165,6 +165,16 @@ async function getLatestFilenames(site) {
     return latestFiles;
 }
 
+function readS3JSON(keyName) {
+    var file = s3.getObject({
+        Bucket: "ems-sensor-data",
+        Key: keyName
+    }, (err, data) => {
+        var result = JSON.parse(data.Body.toString('utf-8'));
+        console.log(result);
+    });
+}
+
 async function readS3csv(keyName) {
     var file = s3.getObject({
         Bucket: "ems-sensor-data",
@@ -175,7 +185,7 @@ async function readS3csv(keyName) {
         Papa.parse(file, {
             header: true,
             complete: function (results) {
-                // console.log(results.data[0]);
+                console.log(results.data);
                 // console.log(keyName.split("/")[0]);
                 var report = setupData(results.data);
                 // console.log(report);
