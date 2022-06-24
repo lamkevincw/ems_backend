@@ -339,7 +339,7 @@ function setupData(raw) {
                 quantifierReport[quantifiers[q]].q_voltage_low = (true);
                 quantifierReport[quantifiers[q]].q_sensor1 = (raw[lastQRow[quantifiers[q]][1]]["detector_raw1"] !== "");
                 quantifierReport[quantifiers[q]].q_sensor2 = (raw[lastQRow[quantifiers[q]][2]]["detector_raw1"] !== "");
-                // quantifierReport[quantifiers[q]].q_sensor3 = (raw[lastQRow[quantifiers[q]][3]]["detector_raw1"] !== "");
+                quantifierReport[quantifiers[q]].q_sensor3 = (raw[lastQRow[quantifiers[q]][3]]["detector_raw1"] !== "");
                 quantifierReport[quantifiers[q]].q_sensor1_0s = (parseFloat(raw[lastQRow[quantifiers[q]][1]]["detector_raw1"]) == 0 &&
                     parseFloat(raw[lastQRow[quantifiers[q]][1]]["detector_raw2"]) == 0 &&
                     parseFloat(raw[lastQRow[quantifiers[q]][1]]["detector_raw3"]) == 0 &&
@@ -348,10 +348,10 @@ function setupData(raw) {
                     parseFloat(raw[lastQRow[quantifiers[q]][2]]["detector_raw2"]) == 0 &&
                     parseFloat(raw[lastQRow[quantifiers[q]][2]]["detector_raw3"]) == 0 &&
                     parseFloat(raw[lastQRow[quantifiers[q]][2]]["detector_raw4"]) == 0);
-                // quantifierReport[quantifiers[q]].q_sensor3_0s = (parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw1"]) == 0 &&
-                //     parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw2"]) == 0 &&
-                //     parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw3"]) == 0 &&
-                //     parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw4"]) == 0);
+                quantifierReport[quantifiers[q]].q_sensor3_0s = (parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw1"]) == 0 &&
+                    parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw2"]) == 0 &&
+                    parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw3"]) == 0 &&
+                    parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw4"]) == 0);
                 quantifierReport[quantifiers[q]].q_sensor1_too_small = (parseFloat(raw[lastQRow[quantifiers[q]][1]]["detector_raw1"]) < 10000 &&
                     parseFloat(raw[lastQRow[quantifiers[q]][1]]["detector_raw2"]) < 10000 &&
                     parseFloat(raw[lastQRow[quantifiers[q]][1]]["detector_raw3"]) < 10000 &&
@@ -360,10 +360,10 @@ function setupData(raw) {
                     parseFloat(raw[lastQRow[quantifiers[q]][2]]["detector_raw2"]) < 10000 &&
                     parseFloat(raw[lastQRow[quantifiers[q]][2]]["detector_raw3"]) < 10000 &&
                     parseFloat(raw[lastQRow[quantifiers[q]][2]]["detector_raw4"]) < 10000);
-                // quantifierReport[quantifiers[q]].q_sensor3_too_small = (parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw1"]) < 10000 &&
-                //     parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw2"]) < 10000 &&
-                //     parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw3"]) < 10000 &&
-                //     parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw4"]) < 10000);
+                quantifierReport[quantifiers[q]].q_sensor3_too_small = (parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw1"]) < 10000 &&
+                    parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw2"]) < 10000 &&
+                    parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw3"]) < 10000 &&
+                    parseFloat(raw[lastQRow[quantifiers[q]][3]]["detector_raw4"]) < 10000);
 
                 break;
         }
@@ -378,6 +378,7 @@ function setupData(raw) {
 }
 
 app.get("/", function (req, res, next) {
+    console.log("Recived request");
     for (var i = 0; i < sites.length; i++) {
         if (sites[i].name === req.query.id) {
             // res.send(sites[i].name);
